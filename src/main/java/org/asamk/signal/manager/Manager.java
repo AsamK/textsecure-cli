@@ -163,7 +163,6 @@ public class Manager implements Signal {
         this.dataPath = this.settingsPath + "/data";
         this.attachmentsPath = this.settingsPath + "/attachments";
         this.avatarsPath = this.settingsPath + "/avatars";
-
     }
 
     public String getUsername() {
@@ -1766,6 +1765,10 @@ public class Manager implements Signal {
         return new File(attachmentsPath, attachmentId + "");
     }
 
+    public String getAttachmentsPath() {
+    	return attachmentsPath;
+    }
+    
     private File retrieveAttachment(SignalServiceAttachmentPointer pointer) throws IOException, InvalidMessageException {
         IOUtils.createPrivateDirectories(attachmentsPath);
         return retrieveAttachment(pointer, getAttachmentFile(pointer.getId()), true);
