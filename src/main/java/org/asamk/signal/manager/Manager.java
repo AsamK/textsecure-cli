@@ -142,6 +142,8 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.asamk.signal.socket.SocketTasks;
+
 public class Manager implements Closeable {
 
     private final SleepTimer timer = new UptimeSleepTimer();
@@ -154,6 +156,8 @@ public class Manager implements Closeable {
     private SignalServiceMessagePipe messagePipe = null;
     private SignalServiceMessagePipe unidentifiedMessagePipe = null;
 
+    public SocketTasks socketTasks = null;
+
     public Manager(SignalAccount account, PathConfig pathConfig, SignalServiceConfiguration serviceConfiguration, String userAgent) {
         this.account = account;
         this.pathConfig = pathConfig;
@@ -162,6 +166,10 @@ public class Manager implements Closeable {
         this.accountManager = createSignalServiceAccountManager();
 
         this.account.setResolver(this::resolveSignalServiceAddress);
+    }
+
+    public SignalAccount getAccount() {
+        return account;
     }
 
     public String getUsername() {

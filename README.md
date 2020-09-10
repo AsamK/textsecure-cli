@@ -20,6 +20,7 @@ sudo ln -sf /opt/signal-cli-"${VERSION}"/bin/signal-cli /usr/local/bin/
 You can find further instructions on the Wiki:
 - [Quickstart](https://github.com/AsamK/signal-cli/wiki/Quickstart)
 - [DBus Service](https://github.com/AsamK/signal-cli/wiki/DBus-service)
+- [Socket IPC using JSON](https://github.com/Matteljay/signal-cli/wiki/Socket-IPC)
 
 ## Usage
 
