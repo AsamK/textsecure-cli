@@ -2,10 +2,16 @@ plugins {
     java
     application
     eclipse
+    `maven-publish`
     `check-lib-versions`
+    `java-library-distribution`
 }
 
-version = "0.7.4"
+val projectVersion: String by project
+val mavenGroup: String by project
+
+version = projectVersion
+group = mavenGroup
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -35,6 +41,20 @@ configurations {
     }
 }
 
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
+}
+
+distributions {
+    main {
+        distributionBaseName.set("signal-cli")
+    }
+}
+
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
@@ -44,8 +64,16 @@ tasks.withType<Jar> {
         attributes(
                 "Implementation-Title" to project.name,
                 "Implementation-Version" to project.version,
-                "Main-Class" to application.mainClass.get()
+                "Main-Class" to application.mainClass.get(),
+                "Automatic-Module-Name" to project.name.replace('-', '.'),
+                // Custom (non-standard) attribute
+                "Maven-Group" to project.group
         )
+    }
+    dependsOn("generatePomFileForMavenPublication")
+    into("META-INF/maven/${project.group}/${project.name}") {
+        from("$buildDir/publications/maven/pom-default.xml")
+        rename(".*", "pom.xml")
     }
 }
 

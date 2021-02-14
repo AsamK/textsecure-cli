@@ -1,7 +1,14 @@
 plugins {
     `java-library`
     `check-lib-versions`
+    `maven-publish`
 }
+
+val projectVersion: String by project
+val mavenGroup: String by project
+
+version = projectVersion
+group = mavenGroup
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -23,6 +30,32 @@ dependencies {
 configurations {
     implementation {
         resolutionStrategy.failOnVersionConflict()
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes(
+            "Implementation-Title" to project.name,
+            "Implementation-Version" to project.version,
+            // use a more meaningful name than 'lib'
+            "Automatic-Module-Name" to "signal.lib",
+            // Custom (non-standard) attribute
+            "Maven-Group" to project.group
+        )
+    }
+    dependsOn("generatePomFileForMavenPublication")
+    into("META-INF/maven/${project.group}/${project.name}") {
+        from("$buildDir/publications/maven/pom-default.xml")
+        rename(".*", "pom.xml")
     }
 }
 
